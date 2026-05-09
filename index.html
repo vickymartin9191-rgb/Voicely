@@ -1,0 +1,2484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>voicely.digital â Smart websites and AI receptionists for dental clinics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0A1628;
+      --accent: #4361EE;
+      --accent-dark: #3451d1;
+      --white: #FFFFFF;
+      --gray-50: #F4F6FA;
+      --gray-100: #E8ECF4;
+      --gray-400: #94A3B8;
+      --gray-600: #64748B;
+      --gray-900: #0F172A;
+      --text: #1E293B;
+      --green: #4ADE80;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* âââ CURSOR GLOW âââ */
+    #cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(67,97,238,0.12) 0%, transparent 65%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+      mix-blend-mode: screen;
+    }
+
+    /* âââ NAV âââ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 22px 0;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    nav.scrolled {
+      background: rgba(10,22,40,0.95);
+      backdrop-filter: blur(20px);
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.3);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+      transition: opacity 0.2s;
+    }
+    .logo:hover { opacity: 0.8; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.25s ease;
+      transform-origin: left;
+    }
+
+    .nav-links a:not(.nav-cta):hover { color: var(--white); }
+    .nav-links a:not(.nav-cta):hover::after { transform: scaleX(1); }
+
+    .nav-cta {
+      background: var(--accent) !important;
+      color: var(--white) !important;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s !important;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover {
+      background: var(--accent-dark) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 20px rgba(67,97,238,0.4) !important;
+    }
+
+    /* âââ HERO âââ */
+    .hero {
+      background: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 140px 0 100px;
+    }
+
+    /* Grid background â moves on mouse */
+    #hero-grid {
+      position: absolute;
+      inset: -10%;
+      width: 120%;
+      height: 120%;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* Accent orb */
+    #hero-orb {
+      position: absolute;
+      top: -200px; right: -100px;
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(67,97,238,0.2) 0%, transparent 65%);
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* Secondary orb */
+    .hero-orb2 {
+      position: absolute;
+      bottom: -200px; left: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(67,97,238,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero text entrance */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(67,97,238,0.12);
+      border: 1px solid rgba(67,97,238,0.28);
+      color: #8AABFF;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2.5s infinite;
+    }
+
+    .hero h1 {
+      font-size: 62px;
+      font-weight: 800;
+      line-height: 1.06;
+      letter-spacing: -2.5px;
+      color: var(--white);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.7s 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero h1 .accent { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 18px;
+      line-height: 1.72;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 42px;
+      max-width: 440px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.7s 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.7s 0.65s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(67,97,238,0.45);
+    }
+
+    .btn-primary:hover::before { opacity: 1; }
+
+    .btn-outline {
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.25s ease;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-2px);
+    }
+
+    /* âââ HERO VISUAL (3D mockup) âââ */
+    .hero-visual {
+      position: relative;
+      perspective: 1200px;
+      opacity: 0;
+      animation: fadeLeft 0.9s 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .mockup-scene {
+      transform-style: preserve-3d;
+      transition: transform 0.12s linear;
+      will-change: transform;
+      animation: floatUp 4s ease-in-out infinite;
+    }
+
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0px) rotateX(2deg); }
+      50% { transform: translateY(-12px) rotateX(2deg); }
+    }
+
+    .mockup-card {
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(24px);
+      box-shadow:
+        0 32px 80px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(255,255,255,0.05) inset,
+        0 1px 0 rgba(255,255,255,0.1) inset;
+      transform-style: preserve-3d;
+    }
+
+    .mockup-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .mockup-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.38);
+    }
+
+    .live-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+      animation: livePulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { box-shadow: 0 0 4px var(--green); opacity: 1; }
+      50% { box-shadow: 0 0 12px var(--green), 0 0 24px rgba(74,222,128,0.3); opacity: 0.7; }
+    }
+
+    .big-stat {
+      font-size: 46px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .big-stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 24px;
+    }
+
+    .bar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 22px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar-day {
+      font-size: 11px;
+      color: rgba(255,255,255,0.32);
+      width: 26px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 5px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--accent), #6B8FFF);
+      width: 0%;
+      transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .bar-val {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      width: 22px;
+      flex-shrink: 0;
+    }
+
+    .mock-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin: 18px 0;
+    }
+
+    .call-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .call-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .call-row:hover {
+      background: rgba(255,255,255,0.07);
+      transform: translateX(3px);
+    }
+
+    .call-icon-wrap {
+      width: 32px; height: 32px;
+      background: rgba(67,97,238,0.18);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .call-icon-wrap svg { width: 14px; height: 14px; stroke: #8AABFF; }
+
+    .call-info { flex: 1; }
+
+    .call-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.25;
+    }
+
+    .call-meta {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 2px;
+    }
+
+    .status-chip {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .status-booked { background: rgba(74,222,128,0.12); color: var(--green); }
+    .status-handled { background: rgba(67,97,238,0.15); color: #8AABFF; }
+
+    /* Float cards â parallax layers */
+    .float-card {
+      position: absolute;
+      background: rgba(255,255,255,0.97);
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.8) inset;
+      border: 1px solid rgba(0,0,0,0.06);
+      transform: translateZ(60px);
+      transition: transform 0.12s linear;
+    }
+
+    .float-card-tr {
+      top: -22px; right: -24px;
+      animation: floatCard1 5s ease-in-out infinite;
+    }
+
+    .float-card-bl {
+      bottom: 36px; left: -32px;
+      animation: floatCard2 6s ease-in-out infinite;
+    }
+
+    @keyframes floatCard1 {
+      0%, 100% { transform: translateZ(60px) translateY(0); }
+      50% { transform: translateZ(60px) translateY(-8px); }
+    }
+
+    @keyframes floatCard2 {
+      0%, 100% { transform: translateZ(60px) translateY(0); }
+      50% { transform: translateZ(60px) translateY(8px); }
+    }
+
+    .fc-label { font-size: 11px; color: var(--gray-600); font-weight: 500; margin-bottom: 3px; }
+    .fc-value { font-size: 22px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 5px; }
+    .fc-change-up { font-size: 12px; font-weight: 600; color: var(--green); }
+    .fc-change-dn { font-size: 12px; font-weight: 600; color: #EF4444; }
+    .fc-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+    /* âââ SCROLL REVEAL SYSTEM âââ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .reveal.reveal-left {
+      transform: translateX(-50px);
+    }
+
+    .reveal.reveal-right {
+      transform: translateX(50px);
+    }
+
+    .reveal.reveal-scale {
+      transform: scale(0.9) translateY(20px);
+    }
+
+    .reveal.visible {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* Stagger delays for grid children */
+    .stagger > *:nth-child(1) { transition-delay: 0s; }
+    .stagger > *:nth-child(2) { transition-delay: 0.1s; }
+    .stagger > *:nth-child(3) { transition-delay: 0.2s; }
+    .stagger > *:nth-child(4) { transition-delay: 0.3s; }
+
+    /* âââ STATS BAR âââ */
+    .stats-bar {
+      border-top: 1px solid var(--gray-100);
+      border-bottom: 1px solid var(--gray-100);
+      padding: 44px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-bar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(67,97,238,0.03), transparent);
+    }
+
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 72px;
+    }
+
+    .stat-block { text-align: center; }
+
+    .stat-num {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -1.2px;
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 14px; color: var(--gray-600); margin-top: 6px; }
+    .stat-sep { width: 1px; height: 44px; background: var(--gray-100); }
+
+    /* âââ SECTIONS SHARED âââ */
+    section { padding: 108px 0; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-h {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1.8px;
+      line-height: 1.1;
+      color: var(--navy);
+      margin-bottom: 18px;
+    }
+
+    .section-p { font-size: 18px; color: var(--gray-600); line-height: 1.72; }
+
+    /* âââ PROBLEM âââ */
+    .problem { background: var(--gray-50); }
+    .problem-hdr { max-width: 600px; margin-bottom: 60px; }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .prob-card {
+      background: var(--white);
+      border: 1px solid var(--gray-100);
+      border-radius: 16px;
+      padding: 34px;
+      cursor: default;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      will-change: transform;
+    }
+
+    .prob-card:hover {
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1), 0 0 0 1px rgba(67,97,238,0.15);
+      border-color: rgba(67,97,238,0.2);
+    }
+
+    .prob-icon {
+      width: 46px; height: 46px;
+      background: rgba(67,97,238,0.08);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      transition: background 0.25s, transform 0.25s;
+    }
+
+    .prob-card:hover .prob-icon {
+      background: rgba(67,97,238,0.14);
+      transform: scale(1.08);
+    }
+
+    .prob-icon svg { width: 20px; height: 20px; stroke: var(--accent); }
+
+    .prob-card h3 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+    }
+
+    .prob-card p { font-size: 15px; color: var(--gray-600); line-height: 1.66; }
+
+    /* âââ SOLUTION âââ */
+    .sol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 60px;
+    }
+
+    .sol-card {
+      border-radius: 20px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.3s ease;
+      cursor: default;
+      will-change: transform;
+    }
+
+    .sol-light {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
+    }
+
+    .sol-dark {
+      background: var(--navy);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .sol-dark::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(67,97,238,0.25) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform 0.4s ease;
+    }
+
+    .sol-card:hover .sol-dark::before { transform: scale(1.2); }
+
+    .sol-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      padding: 5px 13px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .sol-tag-l { background: rgba(67,97,238,0.1); color: var(--accent); }
+    .sol-tag-d { background: rgba(67,97,238,0.22); color: #8AABFF; }
+
+    .sol-card h3 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    .sol-light h3 { color: var(--navy); }
+    .sol-dark h3 { color: var(--white); }
+
+    .sol-card > p { font-size: 16px; line-height: 1.7; margin-bottom: 30px; }
+    .sol-light > p { color: var(--gray-600); }
+    .sol-dark > p { color: rgba(255,255,255,0.55); }
+
+    .feat-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+
+    .feat-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      transition: transform 0.2s;
+    }
+
+    .feat-list li:hover { transform: translateX(4px); }
+
+    .sol-light .feat-list li { color: var(--gray-600); }
+    .sol-dark .feat-list li { color: rgba(255,255,255,0.6); }
+
+    .check-circle {
+      width: 18px; height: 18px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feat-list li:hover .check-circle {
+      transform: scale(1.15);
+      box-shadow: 0 0 8px rgba(67,97,238,0.5);
+    }
+
+    .check-circle svg { width: 10px; height: 10px; stroke: white; stroke-width: 3; }
+
+    /* âââ HOW IT WORKS âââ */
+    .how-hdr { text-align: center; max-width: 540px; margin: 0 auto 72px; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 27px;
+      left: calc(16.67% + 27px);
+      right: calc(16.67% + 27px);
+      border-top: 2px dashed var(--gray-100);
+    }
+
+    .step-col { text-align: center; padding: 0 36px; }
+
+    .step-num {
+      width: 54px; height: 54px;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.5px;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+    }
+
+    .step-col:hover .step-num {
+      transform: scale(1.15) translateY(-4px);
+      box-shadow: 0 12px 30px rgba(10,22,40,0.3);
+    }
+
+    .step-col h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.3px; }
+    .step-col p { font-size: 15px; color: var(--gray-600); line-height: 1.66; }
+
+    /* âââ RESULTS âââ */
+    .results {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .results::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* Animated gradient blob in results */
+    .results-blob {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(67,97,238,0.15) 0%, transparent 70%);
+      animation: blobPulse 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes blobPulse {
+      0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%,-50%) scale(1.3); opacity: 1; }
+    }
+
+    .results-hdr { text-align: center; margin-bottom: 60px; position: relative; }
+    .results-hdr .eyebrow { color: #8AABFF; }
+    .results-hdr .section-h { color: var(--white); }
+
+    .res-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+
+    .res-cell {
+      padding: 52px 44px;
+      background: #0A1628;
+      text-align: center;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .res-cell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(67,97,238,0.12) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .res-cell:hover::before { opacity: 1; }
+    .res-cell:hover { background: rgba(67,97,238,0.06); }
+
+    .res-num {
+      font-size: 58px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -2.5px;
+      line-height: 1;
+      margin-bottom: 10px;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .res-cell:hover .res-num { transform: scale(1.06); }
+    .res-desc { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.55; }
+
+    /* âââ TESTIMONIAL âââ */
+    .testimonial { background: var(--gray-50); }
+
+    .testi-inner { max-width: 740px; margin: 0 auto; text-align: center; }
+
+    .quote-glyph {
+      font-size: 88px;
+      line-height: 0.7;
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-weight: 900;
+      display: block;
+      margin-bottom: 28px;
+      opacity: 0.7;
+    }
+
+    blockquote {
+      font-size: 23px;
+      font-weight: 500;
+      color: var(--navy);
+      line-height: 1.52;
+      letter-spacing: -0.3px;
+      font-style: italic;
+      margin-bottom: 40px;
+    }
+
+    .author-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 48px; height: 48px;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(10,22,40,0.25);
+    }
+
+    .author-name { font-size: 15px; font-weight: 600; color: var(--navy); }
+    .author-clinic { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+    /* âââ FINAL CTA âââ */
+    .final-cta { background: var(--white); }
+
+    .cta-wrap {
+      background: var(--navy);
+      border-radius: 24px;
+      padding: 88px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .cta-wrap:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 32px 80px rgba(10,22,40,0.3);
+    }
+
+    .cta-wrap::before {
+      content: '';
+      position: absolute;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(67,97,238,0.25) 0%, transparent 70%);
+      pointer-events: none;
+      animation: blobPulse 5s ease-in-out infinite;
+    }
+
+    .cta-wrap .eyebrow { color: #8AABFF; position: relative; }
+    .cta-wrap .section-h { color: var(--white); max-width: 540px; margin: 0 auto 16px; position: relative; }
+    .cta-wrap .section-p { color: rgba(255,255,255,0.5); max-width: 480px; margin: 0 auto 44px; position: relative; }
+
+    .cta-btns { display: flex; gap: 14px; justify-content: center; position: relative; }
+
+    .btn-outline-w {
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      transition: all 0.25s ease;
+    }
+
+    .btn-outline-w:hover {
+      border-color: rgba(255,255,255,0.38);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.85);
+      transform: translateY(-2px);
+    }
+
+    /* âââ FOOTER âââ */
+    footer {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-100);
+      padding: 38px 0;
+    }
+
+    .foot-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .foot-logo { font-size: 16px; font-weight: 700; color: var(--navy); text-decoration: none; }
+    .foot-links { display: flex; gap: 32px; list-style: none; }
+    .foot-links a { font-size: 14px; color: var(--gray-600); text-decoration: none; transition: color 0.2s; }
+    .foot-links a:hover { color: var(--navy); }
+    .foot-legal { font-size: 13px; color: var(--gray-400); }
+
+    /* âââ KEYFRAMES âââ */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeLeft {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    /* âââ DEMO SECTION âââ */
+    .final-cta { background: var(--navy); padding: 108px 0; position: relative; overflow: hidden; }
+
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      top: -150px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(67,97,238,0.18) 0%, transparent 65%);
+      pointer-events: none;
+      animation: blobPulse 6s ease-in-out infinite;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .demo-pitch { padding-top: 8px; }
+
+    .demo-trust {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+    }
+
+    .demo-form-wrap {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 36px;
+      backdrop-filter: blur(20px);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .form-row .form-field { margin-bottom: 0; }
+
+    .form-field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .form-field input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+    }
+
+    .form-field input::placeholder { color: rgba(255,255,255,0.25); }
+
+    .form-field input:focus {
+      border-color: rgba(67,97,238,0.6);
+      background: rgba(67,97,238,0.08);
+      box-shadow: 0 0 0 3px rgba(67,97,238,0.15);
+    }
+
+    .form-field input.input-error {
+      border-color: rgba(239,68,68,0.6);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+    }
+
+    .form-submit {
+      width: 100%;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      padding: 15px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+      transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .form-submit:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(67,97,238,0.45);
+    }
+
+    .form-submit:hover::before { opacity: 1; }
+
+    .form-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .form-submit.loading {
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .form-msg {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .form-error-msg {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.25);
+      color: #FCA5A5;
+    }
+
+    .form-success-state {
+      text-align: center;
+      padding: 24px 16px;
+    }
+
+    .success-icon {
+      width: 64px; height: 64px;
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @keyframes successPop {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .form-success-state h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .form-success-state p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    /* âââ MOBILE NAV âââ */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 201;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      transform-origin: center;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,22,40,0.98);
+      backdrop-filter: blur(20px);
+      z-index: 199;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-menu a {
+      color: var(--white);
+      font-size: 28px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s;
+    }
+
+    .mobile-menu.open a {
+      opacity: 1;
+      transform: none;
+    }
+
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.10s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.20s; }
+
+    .mobile-menu a:hover { color: var(--accent); }
+
+    .mobile-menu .m-cta {
+      background: var(--accent);
+      padding: 14px 36px;
+      border-radius: 12px;
+      font-size: 18px;
+      margin-top: 8px;
+    }
+
+    /* âââ CALCULATOR âââ */
+    .calculator-section {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      padding: 108px 0;
+    }
+
+    .calc-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 64px 64px;
+      pointer-events: none;
+    }
+
+    .calc-blob {
+      position: absolute;
+      top: 50%; left: 30%;
+      transform: translate(-50%,-50%);
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(67,97,238,0.15) 0%, transparent 70%);
+      pointer-events: none;
+      animation: blobPulse 7s ease-in-out infinite;
+    }
+
+    .calc-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .calc-header { text-align: center; max-width: 600px; margin: 0 auto 56px; }
+    .calc-header .eyebrow { color: #8AABFF; }
+    .calc-header .section-h { color: var(--white); }
+    .calc-header .section-p { color: rgba(255,255,255,0.5); }
+
+    .calc-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 48px;
+      backdrop-filter: blur(20px);
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .calc-inputs { display: flex; flex-direction: column; gap: 28px; }
+
+    .calc-field label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .calc-field label span {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 100px;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 2px var(--accent), 0 4px 12px rgba(67,97,238,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 3px var(--accent), 0 6px 20px rgba(67,97,238,0.5);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: 3px solid var(--white);
+    }
+
+    /* Filled portion of range */
+    .range-wrap { position: relative; }
+
+    .calc-results {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .calc-result-card {
+      border-radius: 16px;
+      padding: 24px 28px;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .calc-result-card:hover { transform: scale(1.02); }
+
+    .calc-r-monthly {
+      background: rgba(67,97,238,0.15);
+      border: 1px solid rgba(67,97,238,0.3);
+    }
+
+    .calc-r-annual {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+
+    .calc-r-saved {
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.2);
+    }
+
+    .calc-r-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    .calc-r-monthly .calc-r-label { color: #8AABFF; }
+    .calc-r-annual .calc-r-label { color: #FCA5A5; }
+    .calc-r-saved .calc-r-label { color: var(--green); }
+
+    .calc-r-value {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      color: var(--white);
+      transition: all 0.3s ease;
+    }
+
+    .calc-r-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 6px;
+    }
+
+    .calc-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #8AABFF;
+      text-decoration: none;
+      transition: gap 0.2s, color 0.2s;
+    }
+
+    .calc-cta:hover { color: var(--white); gap: 12px; }
+
+    /* âââ RESPONSIVE âââ */
+    @media (max-width: 1024px) {
+      .hero h1 { font-size: 52px; }
+      .section-h { font-size: 38px; }
+    }
+
+    @media (max-width: 768px) {
+      /* Nav */
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      /* Hero */
+      .hero { padding: 120px 0 72px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 0; padding: 0 20px; }
+      .hero h1 { font-size: 40px; letter-spacing: -1.5px; }
+      .hero-sub { font-size: 16px; max-width: 100%; }
+      .hero-visual { display: none; }
+      .hero-btns { flex-direction: column; align-items: flex-start; }
+      .hero-btns a { width: 100%; text-align: center; justify-content: center; }
+
+      /* Stats bar */
+      .stats-bar { padding: 32px 0; }
+      .stats-inner {
+        gap: 0;
+        flex-wrap: wrap;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .stat-sep { display: none; }
+      .stat-num { font-size: 28px; }
+
+      /* Sections */
+      section { padding: 72px 0; }
+      .container { padding: 0 20px; }
+      .section-h { font-size: 30px; letter-spacing: -1px; }
+      .section-p { font-size: 16px; }
+
+      /* Problem */
+      .problem-grid { grid-template-columns: 1fr; gap: 16px; }
+      .prob-card { padding: 24px; }
+
+      /* Solution */
+      .sol-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 40px; }
+      .sol-card { padding: 32px 28px; }
+      .sol-card h3 { font-size: 22px; }
+
+      /* Steps */
+      .steps { grid-template-columns: 1fr; gap: 36px; }
+      .steps::before { display: none; }
+      .step-col { padding: 0; text-align: left; display: flex; flex-direction: column; align-items: flex-start; }
+      .step-num { margin: 0 0 20px 0; }
+
+      /* Results */
+      .res-grid { grid-template-columns: 1fr; gap: 2px; }
+      .res-cell { padding: 36px 28px; }
+      .res-num { font-size: 44px; }
+
+      /* Calculator */
+      .calc-card {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        padding: 28px 24px;
+      }
+
+      .calc-r-value { font-size: 30px; }
+
+      /* Testimonial */
+      blockquote { font-size: 18px; }
+
+      /* Demo section */
+      .demo-grid { grid-template-columns: 1fr; gap: 36px; }
+      .demo-form-wrap { padding: 24px 20px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+      .form-row .form-field { margin-bottom: 16px; }
+
+      /* Footer */
+      .foot-inner { flex-direction: column; gap: 20px; text-align: center; padding: 0 20px; }
+      .foot-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+
+      /* Disable cursor glow and complex 3D on mobile */
+      #cursor-glow { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 34px; }
+      .hero-badge { font-size: 12px; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .section-h { font-size: 26px; }
+      .prob-card h3 { font-size: 17px; }
+      .calc-header .section-h { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor glow -->
+  <div id="cursor-glow"></div>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#solution" class="m-link">Platform</a>
+    <a href="#how" class="m-link">How it works</a>
+    <a href="#results" class="m-link">Results</a>
+    <a href="#demo" class="m-link m-cta">Book a demo</a>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo">voicely.digital</a>
+      <ul class="nav-links">
+        <li><a href="#solution">Platform</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#demo" class="nav-cta">Book a demo</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div id="hero-grid"></div>
+    <div id="hero-orb"></div>
+    <div class="hero-orb2"></div>
+    <div class="hero-inner">
+
+      <div>
+        <div class="hero-badge">
+          <div class="badge-dot"></div>
+          Built exclusively for dental clinics in the USA
+        </div>
+        <h1>Your front desk,<br><span class="accent">upgraded.</span></h1>
+        <p class="hero-sub">voicely.digital builds smart websites and AI receptionists for dental practices â so your team spends time with patients, not stuck on the phone.</p>
+        <div class="hero-btns">
+          <a href="#demo" class="btn-primary">
+            Book a free demo
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#how" class="btn-outline">See how it works</a>
+        </div>
+      </div>
+
+      <!-- 3D MOCKUP -->
+      <div class="hero-visual" id="hero-visual">
+        <div class="mockup-scene" id="mockup-scene">
+
+          <div class="float-card float-card-tr">
+            <div class="fc-label">This week</div>
+            <div class="fc-value">34 <span class="fc-change-up">+18%</span></div>
+            <div class="fc-sub">Appointments booked</div>
+          </div>
+
+          <div class="mockup-card">
+            <div class="mockup-top">
+              <div class="mockup-label">AI Receptionist</div>
+              <div class="live-pill"><div class="live-dot"></div> Live</div>
+            </div>
+
+            <div class="big-stat">98%</div>
+            <div class="big-stat-label">Calls answered â No hold music, no voicemail</div>
+
+            <div class="bar-list" id="bar-list">
+              <div class="bar-row">
+                <div class="bar-day">Mon</div>
+                <div class="bar-track"><div class="bar-fill" data-w="82"></div></div>
+                <div class="bar-val">12</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-day">Tue</div>
+                <div class="bar-track"><div class="bar-fill" data-w="65"></div></div>
+                <div class="bar-val">9</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-day">Wed</div>
+                <div class="bar-track"><div class="bar-fill" data-w="96"></div></div>
+                <div class="bar-val">14</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-day">Thu</div>
+                <div class="bar-track"><div class="bar-fill" data-w="55"></div></div>
+                <div class="bar-val">8</div>
+              </div>
+            </div>
+
+            <div class="mock-divider"></div>
+
+            <div class="call-list">
+              <div class="call-row">
+                <div class="call-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div class="call-info">
+                  <div class="call-name">Sarah M. â New patient</div>
+                  <div class="call-meta">Cleaning + exam Â· Today 9:14am</div>
+                </div>
+                <div class="status-chip status-booked">Booked</div>
+              </div>
+              <div class="call-row">
+                <div class="call-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div class="call-info">
+                  <div class="call-name">James R. â Emergency inquiry</div>
+                  <div class="call-meta">Toothache Â· Today 11:32am</div>
+                </div>
+                <div class="status-chip status-handled">Handled</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="float-card float-card-bl">
+            <div class="fc-label">Missed calls</div>
+            <div class="fc-value" style="color:var(--gray-900)">2% <span class="fc-change-dn">-61%</span></div>
+            <div class="fc-sub">vs. last month</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-inner stagger">
+      <div class="stat-block reveal">
+        <span class="stat-num" data-count="2400" data-suffix="+">0</span>
+        <div class="stat-label">Appointments booked monthly</div>
+      </div>
+      <div class="stat-sep reveal"></div>
+      <div class="stat-block reveal">
+        <span class="stat-num" data-count="98" data-suffix="%">0</span>
+        <div class="stat-label">Call answer rate</div>
+      </div>
+      <div class="stat-sep reveal"></div>
+      <div class="stat-block reveal">
+        <span class="stat-num">5 days</span>
+        <div class="stat-label">From contract to live site</div>
+      </div>
+      <div class="stat-sep reveal"></div>
+      <div class="stat-block reveal">
+        <span class="stat-num">0 hrs</span>
+        <div class="stat-label">IT setup required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section class="problem" id="problem">
+    <div class="container">
+      <div class="problem-hdr reveal">
+        <span class="eyebrow">The problem</span>
+        <h2 class="section-h">Your front desk is your biggest bottleneck.</h2>
+        <p class="section-p">Most dental clinics lose patients before they ever walk through the door. Here's exactly where it happens.</p>
+      </div>
+      <div class="problem-grid stagger">
+        <div class="prob-card reveal tilt-card">
+          <div class="prob-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <h3>Missed calls = missed patients</h3>
+          <p>When your front desk is with a patient, the phone rings out. That caller doesn't leave a voicemail â they call the next clinic on the list. You never know what you lost.</p>
+        </div>
+        <div class="prob-card reveal tilt-card">
+          <div class="prob-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3>Manual scheduling drains your team</h3>
+          <p>Every call your front desk handles is 4â8 minutes off patient care. Multiply that by 30 calls a day and you're losing hours of productive capacity every single week.</p>
+        </div>
+        <div class="prob-card reveal tilt-card">
+          <div class="prob-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3>Generic websites don't rank or convert</h3>
+          <p>Template sites built for any business rank poorly in local search and give patients no reason to choose you. The clinic down the street with a better site wins by default.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="calculator-section" id="calculator">
+    <div class="calc-bg"></div>
+    <div class="calc-blob"></div>
+    <div class="container calc-inner">
+      <div class="calc-header reveal">
+        <span class="eyebrow">Revenue calculator</span>
+        <h2 class="section-h">How much is your phone costing you?</h2>
+        <p class="section-p">Adjust the sliders to match your clinic. See the exact revenue you're losing to missed calls every month.</p>
+      </div>
+      <div class="calc-card reveal reveal-scale">
+        <div class="calc-inputs">
+          <div class="calc-field">
+            <label>Calls per day <span id="val-calls">35</span></label>
+            <div class="range-wrap">
+              <input type="range" id="r-calls" min="5" max="150" value="35" step="5">
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>% of calls missed <span id="val-missed">28%</span></label>
+            <div class="range-wrap">
+              <input type="range" id="r-missed" min="5" max="60" value="28" step="1">
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>New patient conversion rate <span id="val-conv">40%</span></label>
+            <div class="range-wrap">
+              <input type="range" id="r-conv" min="10" max="80" value="40" step="5">
+            </div>
+          </div>
+          <div class="calc-field">
+            <label>Average patient value <span id="val-apv">$480</span></label>
+            <div class="range-wrap">
+              <input type="range" id="r-apv" min="100" max="1200" value="480" step="20">
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-results">
+          <div class="calc-result-card calc-r-monthly">
+            <div class="calc-r-label">Lost every month</div>
+            <div class="calc-r-value" id="out-monthly">$0</div>
+            <div class="calc-r-sub">In missed new patient revenue</div>
+          </div>
+          <div class="calc-result-card calc-r-annual">
+            <div class="calc-r-label">Lost every year</div>
+            <div class="calc-r-value" id="out-annual">$0</div>
+            <div class="calc-r-sub">If nothing changes today</div>
+          </div>
+          <div class="calc-result-card calc-r-saved">
+            <div class="calc-r-label">Recoverable with voicely.digital</div>
+            <div class="calc-r-value" id="out-saved">$0</div>
+            <div class="calc-r-sub">Based on 61% call recovery rate</div>
+          </div>
+          <a href="#demo" class="calc-cta">
+            Stop the bleed â book a demo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section id="solution">
+    <div class="container">
+      <div class="reveal">
+        <span class="eyebrow">What we build</span>
+        <h2 class="section-h">Two products. One outcome:<br>a clinic that runs itself.</h2>
+      </div>
+      <div class="sol-grid stagger">
+        <div class="sol-card sol-light reveal tilt-card">
+          <div class="sol-tag sol-tag-l">Smart Website</div>
+          <h3>A site built to rank locally and convert visitors into booked appointments.</h3>
+          <p>Not a template. A clinic-specific website engineered for Google local search, patient trust, and appointment booking â delivered in 5 business days.</p>
+          <ul class="feat-list">
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Built for local SEO â shows up when patients search nearby</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Online booking integrated with your existing scheduler</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Trust signals, reviews, and before/after galleries</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Mobile-first, HIPAA-aware design</li>
+          </ul>
+        </div>
+        <div class="sol-card sol-dark reveal tilt-card">
+          <div class="sol-tag sol-tag-d">AI Receptionist</div>
+          <h3>Answers every call. Books every patient. 24/7.</h3>
+          <p>Connects to your existing phone line. Qualifies patients, handles insurance questions, books appointments, and sends reminders â without a single hold.</p>
+          <ul class="feat-list">
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Answers after hours, weekends, and during busy periods</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Handles new patient intake automatically</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Sends appointment reminders to cut no-shows</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>No IT setup â live within 48 hours</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section style="background:var(--gray-50);" id="how">
+    <div class="container">
+      <div class="how-hdr reveal">
+        <span class="eyebrow">The process</span>
+        <h2 class="section-h">Live in under a week.</h2>
+        <p class="section-p" style="text-align:center;">No long implementations. No IT team. Three steps and you're running.</p>
+      </div>
+      <div class="steps stagger">
+        <div class="step-col reveal">
+          <div class="step-num">1</div>
+          <h3>We build your site in 5 days</h3>
+          <p>You answer 10 questions about your clinic. We handle everything else â design, copy, SEO setup, and launch.</p>
+        </div>
+        <div class="step-col reveal">
+          <div class="step-num">2</div>
+          <h3>We connect your AI receptionist</h3>
+          <p>We integrate with your existing phone line and scheduling system. Nothing new for your team to learn or manage.</p>
+        </div>
+        <div class="step-col reveal">
+          <div class="step-num">3</div>
+          <h3>Patients book. You grow.</h3>
+          <p>Your clinic captures calls and ranks locally from day one. You get a monthly report showing exactly what's working.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="results" id="results">
+    <div class="results-blob"></div>
+    <div class="container">
+      <div class="results-hdr reveal">
+        <span class="eyebrow">What clinics see in 90 days</span>
+        <h2 class="section-h">Real numbers. No asterisks.</h2>
+      </div>
+      <div class="res-grid stagger reveal reveal-scale">
+        <div class="res-cell">
+          <div class="res-num" data-count="34" data-suffix="%">0%</div>
+          <div class="res-desc">More appointments booked<br>in the first 90 days</div>
+        </div>
+        <div class="res-cell">
+          <div class="res-num" data-count="61" data-suffix="%">0%</div>
+          <div class="res-desc">Reduction in missed calls<br>from day one</div>
+        </div>
+        <div class="res-cell">
+          <div class="res-num">0 hrs</div>
+          <div class="res-desc">IT setup required<br>to go live</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="testimonial">
+    <div class="container">
+      <div class="testi-inner reveal">
+        <span class="quote-glyph">"</span>
+        <blockquote>We were missing 12â15 calls a day and didn't even know it. Three weeks after going live with voicely.digital, our schedule was full two weeks out for the first time in three years.</blockquote>
+        <div class="author-row">
+          <div class="avatar">DM</div>
+          <div>
+            <div class="author-name">Dr. David M.</div>
+            <div class="author-clinic">General Dentistry Á· Austin, TX</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA + FORM -->
+  <section class="final-cta" id="demo">
+    <div class="container">
+      <div class="demo-grid reveal reveal-scale">
+
+        <!-- Left: pitch -->
+        <div class="demo-pitch">
+          <span class="eyebrow" style="color:#8AABFF;">Get started</span>
+          <h2 class="section-h" style="color:var(--white);">Ready to stop losing patients to your phone?</h2>
+          <p class="section-p" style="color:rgba(255,255,255,0.5);margin-bottom:36px;">Book a 20-minute call. We'll show you exactly what this looks like for your clinic â no pitch deck, no pressure.</p>
+          <div class="demo-trust">
+            <div class="trust-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Live in 5 business days
+            </div>
+            <div class="trust-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              No long-term contracts
+            </div>
+            <div class="trust-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Zero IT setup required
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: form -->
+        <div class="demo-form-wrap">
+          <form id="demo-form" novalidate>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-name">Your name</label>
+                <input type="text" id="f-name" placeholder="Dr. Sarah Johnson" required>
+              </div>
+              <div class="form-field">
+                <label for="f-clinic">Clinic name</label>
+                <input type="text" id="f-clinic" placeholder="Bright Smile Dental" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-email">Email address</label>
+                <input type="email" id="f-email" placeholder="you@yourclinic.com" required>
+              </div>
+              <div class="form-field">
+                <label for="f-phone">Phone number</label>
+                <input type="tel" id="f-phone" placeholder="(555) 000-0000">
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="f-city">City &amp; state</label>
+              <input type="text" id="f-city" placeholder="Austin, TX">
+            </div>
+            <button type="submit" class="form-submit" id="form-submit">
+              <span id="submit-text">Book my free demo</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <div id="form-error" class="form-msg form-error-msg" style="display:none;"></div>
+          </form>
+
+          <!-- Success state -->
+          <div id="form-success" style="display:none;" class="form-success-state">
+            <div class="success-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h3>You're booked in.</h3>
+            <p>We'll be in touch within one business day to schedule your 20-minute call.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-inner">
+      <a href="#" class="foot-logo">voicely.digital</a>
+      <ul class="foot-links">
+        <li><a href="#solution">Platform</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#demo">Contact</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+      <div class="foot-legal">Â© 2026 voicely.digital</div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    /* âââââââââââââââââââââââââââââââââââââââââ
+       SUPABASE CONFIG
+       Replace these two values with yours from:
+       Supabase dashboard â Settings â API
+    âââââââââââââââââââââââââââââââââââââââââ */
+    const SUPABASE_URL  = 'https://luwivyuzmarayggmvzhk.supabase.co'
+    const SUPABASE_ANON = 'sb_publishable_9dBJ9dVKsc479WlRgxD2Zw_ICZr2D6z'
+
+    const { createClient } = supabase
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON)
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       1. NAV SCROLL EFFECT
+    âââââââââââââââââââââââââââââââââââââââ */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       2. CURSOR GLOW
+    âââââââââââââââââââââââââââââââââââââââ */
+    const cursorGlow = document.getElementById('cursor-glow');
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }, { passive: true });
+
+    function animateCursor() {
+      glowX += (mouseX - glowX) * 0.08;
+      glowY += (mouseY - glowY) * 0.08;
+      cursorGlow.style.left = glowX + 'px';
+      cursorGlow.style.top = glowY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       3. HERO PARALLAX (grid + orb on mouse)
+    âââââââââââââââââââââââââââââââââââââââ */
+    const heroSection = document.getElementById('hero');
+    const heroGrid = document.getElementById('hero-grid');
+    const heroOrb = document.getElementById('hero-orb');
+
+    let heroMouseX = 0, heroMouseY = 0;
+    let gridX = 0, gridY = 0;
+    let orbX = 0, orbY = 0;
+
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      heroMouseX = (e.clientX - rect.width / 2) / rect.width;
+      heroMouseY = (e.clientY - rect.height / 2) / rect.height;
+    }, { passive: true });
+
+    function animateHero() {
+      gridX += (heroMouseX * 18 - gridX) * 0.06;
+      gridY += (heroMouseY * 18 - gridY) * 0.06;
+      orbX += (heroMouseX * -30 - orbX) * 0.04;
+      orbY += (heroMouseY * -30 - orbY) * 0.04;
+
+      heroGrid.style.transform = `translate(${gridX}px, ${gridY}px)`;
+      heroOrb.style.transform = `translate(${orbX}px, ${orbY}px)`;
+      requestAnimationFrame(animateHero);
+    }
+    animateHero();
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       4. 3D MOCKUP â mouse-tracked tilt
+    âââââââââââââââââââââââââââââââââââââââ */
+    const mockupScene = document.getElementById('mockup-scene');
+    const heroVisual = document.getElementById('hero-visual');
+
+    if (heroVisual) {
+      let tiltX = 0, tiltY = 0;
+      let targetTiltX = 0, targetTiltY = 0;
+
+      heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroVisual.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        targetTiltX = (y / rect.height) * -14;
+        targetTiltY = (x / rect.width) * 14;
+      }, { passive: true });
+
+      heroSection.addEventListener('mouseleave', () => {
+        targetTiltX = 0;
+        targetTiltY = 0;
+      });
+
+      function animateTilt() {
+        tiltX += (targetTiltX - tiltX) * 0.08;
+        tiltY += (targetTiltY - tiltY) * 0.08;
+        mockupScene.style.transform = `
+          perspective(1000px)
+          rotateX(${tiltX}deg)
+          rotateY(${tiltY}deg)
+        `;
+        requestAnimationFrame(animateTilt);
+      }
+      animateTilt();
+    }
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       5. BAR FILL ANIMATION (hero bars)
+    âââââââââââââââââââââââââââââââââââââââ */
+    function animateBars() {
+      const fills = document.querySelectorAll('.bar-fill');
+      fills.forEach((fill, i) => {
+        setTimeout(() => {
+          fill.style.width = fill.dataset.w + '%';
+        }, 800 + i * 150);
+      });
+    }
+    // Trigger after page load
+    setTimeout(animateBars, 600);
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       6. 3D TILT ON CARDS
+    âââââââââââââââââââââââââââââââââââââââ */
+    function initTiltCards() {
+      document.querySelectorAll('.tilt-card').forEach(card => {
+        let tx = 0, ty = 0, tz = 1;
+        let targetTX = 0, targetTY = 0, targetTZ = 1;
+        let rafId;
+
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = 'box-shadow 0.3s ease';
+          targetTZ = 1.02;
+        });
+
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          targetTX = (y / rect.height) * -10;
+          targetTY = (x / rect.width) * 10;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          targetTX = 0;
+          targetTY = 0;
+          targetTZ = 1;
+        });
+
+        function loopTilt() {
+          tx += (targetTX - tx) * 0.1;
+          ty += (targetTY - ty) * 0.1;
+          tz += (targetTZ - tz) * 0.1;
+          card.style.transform = `perspective(800px) rotateX(${tx}deg) rotateY(${ty}deg) scale(${tz})`;
+          rafId = requestAnimationFrame(loopTilt);
+        }
+        loopTilt();
+      });
+    }
+    initTiltCards();
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       7. SCROLL REVEAL (IntersectionObserver)
+    âââââââââââââââââââââââââââââââââââââââ */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Trigger counters if element has data-count
+          const counters = entry.target.querySelectorAll('[data-count]');
+          counters.forEach(el => animateCounter(el));
+          // Also check if the element itself is a counter
+          if (entry.target.hasAttribute('data-count')) {
+            animateCounter(entry.target);
+          }
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       8. COUNTER ANIMATION
+    âââââââââââââââââââââââââââââââââââââââ */
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      if (!target || el.dataset.animated) return;
+      el.dataset.animated = 'true';
+
+      const duration = 1800;
+      const start = performance.now();
+
+      function easeOutExpo(t) {
+        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+      }
+
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutExpo(progress);
+        const current = Math.round(eased * target);
+
+        // Format thousands
+        el.textContent = (current >= 1000 ? current.toLocaleString() : current) + suffix;
+
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    // Also observe counter elements that aren't inside .reveal
+    document.querySelectorAll('[data-count]').forEach(el => {
+      if (!el.closest('.reveal')) {
+        revealObserver.observe(el);
+      }
+    });
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       9. SCROLL PROGRESS â subtle nav glow
+    âââââââââââââââââââââââââââââââââââââââ */
+    // Already handled by nav.scrolled class above
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       10. MOBILE MENU
+    âââââââââââââââââââââââââââââââââââââââ */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function toggleMenu() {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       11. REVENUE CALCULATOR
+    âââââââââââââââââââââââââââââââââââââââ */
+    const rCalls  = document.getElementById('r-calls');
+    const rMissed = document.getElementById('r-missed');
+    const rConv   = document.getElementById('r-conv');
+    const rApv    = document.getElementById('r-apv');
+
+    const valCalls  = document.getElementById('val-calls');
+    const valMissed = document.getElementById('val-missed');
+    const valConv   = document.getElementById('val-conv');
+    const valApv    = document.getElementById('val-apv');
+
+    const outMonthly = document.getElementById('out-monthly');
+    const outAnnual  = document.getElementById('out-annual');
+    const outSaved   = document.getElementById('out-saved');
+
+    function formatCurrency(n) {
+      if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+      if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
+      return '$' + Math.round(n).toLocaleString();
+    }
+
+    function animateValue(el, newVal) {
+      const formatted = formatCurrency(newVal);
+      if (el.textContent === formatted) return;
+      el.style.transform = 'scale(0.92)';
+      el.style.opacity = '0.5';
+      setTimeout(() => {
+        el.textContent = formatted;
+        el.style.transform = 'scale(1)';
+        el.style.opacity = '1';
+        el.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s';
+      }, 120);
+    }
+
+    function updateCalc() {
+      const callsPerDay  = parseInt(rCalls.value);
+      const missedPct    = parseInt(rMissed.value) / 100;
+      const convPct      = parseInt(rConv.value) / 100;
+      const apv          = parseInt(rApv.value);
+      const workDays     = 22; // business days/month
+
+      const missedCallsMonth = callsPerDay * missedPct * workDays;
+      const lostPatientsMonth = missedCallsMonth * convPct;
+      const monthlyLoss = lostPatientsMonth * apv;
+      const annualLoss  = monthlyLoss * 12;
+      const recovered   = annualLoss * 0.61;
+
+      valCalls.textContent  = callsPerDay;
+      valMissed.textContent = rMissed.value + '%';
+      valConv.textContent   = rConv.value + '%';
+      valApv.textContent    = '$' + parseInt(rApv.value).toLocaleString();
+
+      animateValue(outMonthly, monthlyLoss);
+      animateValue(outAnnual,  annualLoss);
+      animateValue(outSaved,   recovered);
+
+      // Update range fill color
+      [rCalls, rMissed, rConv, rApv].forEach(r => {
+        const min = parseFloat(r.min);
+        const max = parseFloat(r.max);
+        const val = parseFloat(r.value);
+        const pct = ((val - min) / (max - min)) * 100;
+        r.style.background = `linear-gradient(90deg, #4361EE ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+      });
+    }
+
+    [rCalls, rMissed, rConv, rApv].forEach(r => {
+      r.addEventListener('input', updateCalc);
+    });
+
+    // Init
+    updateCalc();
+
+    /* âââââââââââââââââââââââââââââââââââââââ
+       12. DEMO FORM â Supabase submission
+    âââââââââââââââââââââââââââââââââââââââ */
+    const demoForm    = document.getElementById('demo-form')
+    const formSuccess = document.getElementById('form-success')
+    const formError   = document.getElementById('form-error')
+    const submitBtn   = document.getElementById('form-submit')
+    const submitText  = document.getElementById('submit-text')
+
+    function setLoading(loading) {
+      submitBtn.disabled = loading
+      submitBtn.classList.toggle('loading', loading)
+      submitText.innerHTML = loading
+        ? '<div class="spinner"></div>'
+        : 'Book my free demo'
+    }
+
+    function showError(msg) {
+      formError.textContent = msg
+      formError.style.display = 'block'
+      setTimeout(() => { formError.style.display = 'none' }, 6000)
+    }
+
+    function validateForm(data) {
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      const fields = [
+        { id: 'f-name',   val: data.first_name,  label: 'Your name' },
+        { id: 'f-clinic', val: data.clinic_name,  label: 'Clinic name' },
+        { id: 'f-email',  val: data.email,        label: 'Email address' },
+      ]
+
+      // Clear previous errors
+      document.querySelectorAll('.form-field input').forEach(i => i.classList.remove('input-error'))
+
+      for (const f of fields) {
+        if (!f.val.trim()) {
+          document.getElementById(f.id).classList.add('input-error')
+          document.getElementById(f.id).focus()
+          return `${f.label} is required.`
+        }
+      }
+
+      if (!emailRe.test(data.email)) {
+        document.getElementById('f-email').classList.add('input-error')
+        return 'Please enter a valid email address.'
+      }
+
+      return null
+    }
+
+    demoForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const data = {
+        first_name:  document.getElementById('f-name').value.trim(),
+        clinic_name: document.getElementById('f-clinic').value.trim(),
+        email:       document.getElementById('f-email').value.trim(),
+        phone:       document.getElementById('f-phone').value.trim(),
+        city:        document.getElementById('f-city').value.trim(),
+        source:      'homepage',
+      }
+
+      const validationError = validateForm(data)
+      if (validationError) { showError(validationError); return }
+
+      setLoading(true)
+
+      try {
+        const { error } = await sb.from('demo_requests').insert(data)
+
+        if (error) throw error
+
+        // Success â swap form for success state
+        demoForm.style.display = 'none'
+        formSuccess.style.display = 'block'
+
+      } catch (err) {
+        console.error(err)
+        showError('Something went wrong. Please email us directly at hello@voicely.digital')
+      } finally {
+        setLoading(false)
+      }
+    })
+  </script>
+
+</body>
+</html>
