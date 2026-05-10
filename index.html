@@ -962,6 +962,162 @@
     .author-name { font-size: 15px; font-weight: 600; color: var(--navy); }
     .author-clinic { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
 
+    /* âââ PRICING âââ */
+    .pricing { background: var(--white); }
+
+    .pricing-hdr { text-align: center; margin-bottom: 56px; }
+
+    .pricing-anchor {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 15px;
+      color: var(--gray-600);
+      font-style: italic;
+    }
+
+    .pricing-anchor strong { color: var(--navy); font-style: normal; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 44px 40px;
+      background: var(--white);
+      position: relative;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .price-card:hover {
+      box-shadow: 0 12px 40px rgba(10,15,44,0.10);
+      transform: translateY(-3px);
+    }
+
+    .price-card.price-recommended {
+      border-color: var(--accent);
+      background: #F4F7FF;
+    }
+
+    .price-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .price-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-600);
+      margin-bottom: 16px;
+    }
+
+    .price-amount {
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 4px;
+    }
+
+    .price-amount sup {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0;
+      vertical-align: super;
+    }
+
+    .price-cadence {
+      font-size: 14px;
+      color: var(--gray-600);
+      margin-bottom: 28px;
+    }
+
+    .price-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin-bottom: 24px;
+    }
+
+    .price-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .price-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--gray-700);
+      line-height: 1.4;
+    }
+
+    .price-features li .check-circle {
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .price-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .price-card:not(.price-recommended) .price-cta {
+      background: var(--gray-100);
+      color: var(--navy);
+      border: 1.5px solid var(--gray-200);
+    }
+
+    .price-card:not(.price-recommended) .price-cta:hover {
+      background: var(--gray-200);
+    }
+
+    .price-card.price-recommended .price-cta {
+      background: var(--accent);
+      color: var(--white);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.30);
+    }
+
+    .price-card.price-recommended .price-cta:hover {
+      background: #1d4ed8;
+    }
+
+    @media (max-width: 640px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .price-amount { font-size: 44px; }
+      .price-card { padding: 40px 28px; }
+    }
+
     /* âââ FINAL CTA âââ */
     .final-cta { background: var(--white); }
 
@@ -1973,6 +2129,49 @@
             <div class="author-clinic">General Dentistry Á· Austin, TX</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="pricing-hdr reveal">
+        <span class="eyebrow">Pricing</span>
+        <h2 class="section-h">Simple, transparent pricing.</h2>
+        <p class="pricing-anchor">You're losing <strong>$20K+/year</strong> in missed calls. Our setup pays for itself in week 2.</p>
+      </div>
+      <div class="pricing-grid stagger">
+
+        <div class="price-card reveal">
+          <div class="price-label">Setup fee</div>
+          <div class="price-amount"><sup>$</sup>2,500</div>
+          <div class="price-cadence">One-time, paid at kickoff</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Custom dental website built from scratch</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Local SEO configuration and launch</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>AI receptionist setup and phone integration</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Live in 5 business days</li>
+          </ul>
+          <a href="#demo" class="price-cta">Book a Free Demo</a>
+        </div>
+
+        <div class="price-card price-recommended reveal">
+          <div class="price-badge">Recommended</div>
+          <div class="price-label">Monthly plan</div>
+          <div class="price-amount"><sup>$</sup>299</div>
+          <div class="price-cadence">Per month â cancel any time</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>AI receptionist running 24/7</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Website hosting, updates, and maintenance</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>Monthly performance report</li>
+            <li><div class="check-circle"><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg></div>No long-term contract required</li>
+          </ul>
+          <a href="#demo" class="price-cta">Book a Free Demo</a>
+        </div>
+
       </div>
     </div>
   </section>
