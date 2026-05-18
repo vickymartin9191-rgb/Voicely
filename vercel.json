@@ -1,0 +1,22 @@
+{
+    "name": "voicely",
+    "version": 2,
+    "public": false,
+    "buildCommand": "npm run build",
+    "devCommand": "vercel dev",
+  "env": {
+    "RESEND_API_KEY": {
+      "description": "API key for Resend email service"
+    }
+  },
+  "routes": [
+    {
+      "src": "^/api/(?<path>.*)",
+            "dest": "/api/$path"
+    },
+    {
+      "src": "^/(?!api).*",
+            "dest": "/index.html"
+    }
+  ]
+}
